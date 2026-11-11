@@ -1,0 +1,39 @@
+[project]
+name = "ttsprodj"
+version = "0.1.0"
+description = "Озвучивание книг на русском языке: Silero TTS на PyTorch ROCm"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "torch>=2.10",
+    "triton-rocm; sys_platform == 'linux'",  # <-- добавлено
+    "numpy>=1.26",
+    "num2words>=0.5.13",
+    "beautifulsoup4>=4.12",
+    "scipy>=1.18.1",
+]
+
+[project.scripts]
+ttsprodj = "ttsprodj.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[[tool.uv.index]]
+name = "pytorch-rocm"
+url = "https://download.pytorch.org/whl/rocm10.0"
+
+[tool.uv]
+index-strategy = "unsafe-best-match"
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-rocm", marker = "sys_platform == 'linux'" }]
+triton-rocm = [{ index = "pytorch-rocm", marker = "sys_platform == 'linux'" }]
+rocm = [{ index = "pytorch-rocm", marker = "sys_platform == 'linux'" }]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
